@@ -1,7 +1,7 @@
 // global constants
-const clueHoldTime = 1000; //how long to hold each clue's light/sound
-const cluePauseTime = 333; //how long to pause in between clues
-const nextClueWaitTime = 1000; //how long to wait before starting playback of the clue sequence
+var clueHoldTime = 700; //how long to hold each clue's light/sound
+var cluePauseTime = 333; //how long to pause in between clues
+const nextClueWaitTime = 800; //how long to wait before starting playback of the clue sequence
 
 //Global Variables
 var pattern = [2, 2, 4, 3, 2, 1, 2, 4];
@@ -28,10 +28,10 @@ function stopGame() {
 
 // Sound Synthesis Functions
 const freqMap = {
-  1: 241.6,
-  2: 329.6,
-  3: 392,
-  4: 486.2
+  1: 180.6,
+  2: 359.6,
+  3: 532,
+  4: 906.2
 };
 
 function playTone(btn, len) {
@@ -49,6 +49,10 @@ function startTone(btn) {
     g.gain.setTargetAtTime(volume, context.currentTime + 0.05, 0.025);
     tonePlaying = true;
   }
+}
+function gnome(){
+  var audio = new Audio('https://cdn.glitch.com/b48e9af3-1677-4a8a-a07f-5300e31d9252%2Fyt1s.com%20-%20Gnome%20sound%20effect.mp3?v=1615414831977');
+  audio.play();
 }
 
 function stopTone() {
@@ -92,7 +96,7 @@ function loseGame() {
 function winGame() {
   stopGame();
   alert("Game Over. You won!");
-}
+}  
 
 function guess(btn){
   console.log("user guessed: " + btn);
@@ -102,26 +106,28 @@ function guess(btn){
   }
 
   if(pattern[guessCounter] == btn){
-    //Guess was correct!
     if(guessCounter == progress){
-      if(progress == pattern.length - 1){
-        //GAME OVER: WIN!
+      if(progress == 7){//in case of code exploding revert 9 to pattern.length - 1
         winGame();
-      }else{
-        //Pattern correct. Add next segment
+      }else if (guessCounter == progress){
+        clueHoldTime -= 90;
+        cluePauseTime -= 20;
         progress++;
+        console.log("Progress is " + progress)
         playClueSequence();
       }
     }else{
-      //so far so good... check the next guess
       guessCounter++;
     }
   }else{
-    //Guess was incorrect
-    //GAME OVER: LOSE!
     loseGame();
   }
-}    
+}  
+if (progress == 7){
+  console.log("game win");
+  winGame();
+}
+
 //Page Initialization
 // Init Sound Synthesizer
 var context = new AudioContext();
