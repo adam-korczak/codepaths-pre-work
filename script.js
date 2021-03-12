@@ -120,9 +120,16 @@ function guess(btn){
       guessCounter++;
     }
   }else{
-    loseGame();
+    if(mistake == 2){
+      loseGame();
+  }else{
+    mistake++;
+    console.log(mistake + " mistakes");
+    alert("You've made a mistake! Be careful not to make 3!")
   }
 }  
+}
+  
 if (progress == 7){
   console.log("game win");
   winGame();
